@@ -18,7 +18,22 @@ const useField = (type) => {
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect()
+  useEffect(() => {
+    const fetchCountry = async (name) => {
+      try {
+        const response = await axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
+        setCountry({
+          found: true,
+          data: response.data[0]
+        })
+      } catch(exception) {
+        setCountry({ found: false })
+      }
+    }
+    if (name !== '') {
+      fetchCountry(name)
+    }
+  }, [name])
 
   return country
 }
@@ -55,7 +70,7 @@ const App = () => {
     e.preventDefault()
     setName(nameInput.value)
   }
-
+  
   return (
     <div>
       <form onSubmit={fetch}>
